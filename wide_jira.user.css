@@ -1,0 +1,30 @@
+/* ==UserStyle==
+@name          Wide JIRA
+@description   Widen your create issue box in JIRA
+@author        Fishswing
+@namespace     https://greasyfork.org/users/206706
+@license       MIT
+@version       0.0.2
+==/UserStyle== */
+
+@-moz-document url-prefix('http://jira.'), url-prefix('https://jira.') {
+
+.aui-dialog2-large {
+    width: 80% !important;
+    top: 3% !important;
+    bottom: 3% !important;
+}
+
+.aui-dialog2-content {
+    max-height: 100% !important;
+}
+
+.aui-page-focused-large .aui-page-panel {
+    width: 80% !important;
+}
+
+.aui-page-focused-large .aui-page-header {
+    width: 80% !important;
+}
+
+}
