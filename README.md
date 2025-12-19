@@ -1,8 +1,9 @@
 ## Wide JIRA ##
 
-A simple user CSS to widen your create issue box in JIRA
+A simple user script to widen the "description" box of JIRA
 
-To use this style, the JIRA URL must start with `http://jira.*` or `https://jira.*`.
+URLs matching `http(s)://jira.*` or `http(s)://*/jira/` will auto apply the script;
+For other URLs, add it to "User Includes" in your UserScript manager.
 
 &nbsp;
 
