@@ -4,19 +4,21 @@
 @author        Fishswing (Enhanced by Gemini)
 @namespace     https://greasyfork.org/users/206706
 @license       MIT
-@version       1.0.11
+@version       1.0.13
 ==/UserStyle== */
 
 @-moz-document url-prefix('http://jira.'), url-prefix('https://jira.') {
 
     /* =========================================
-       1. 针对主业务弹窗 (Create/Edit/Link) 的优化
+       1. 针对主业务弹窗 (Create/Edit/Link/Sub-task) 的优化
+       【v1.0.12】新增 section#create-subtask-dialog 支持子任务弹窗
        ========================================= */
     section#create-issue-dialog,
     section#edit-issue-dialog,
     section#link-issue-dialog,
     section#clone-issue-dialog,
-    section#workflow-transition-view-dialog {
+    section#workflow-transition-view-dialog,
+    section#create-subtask-dialog {
         width: 80vw !important;
         left: 10vw !important;
         top: 5vh !important;
@@ -29,7 +31,8 @@
     section#edit-issue-dialog .aui-dialog2-content,
     section#link-issue-dialog .aui-dialog2-content,
     section#clone-issue-dialog .aui-dialog2-content,
-    section#workflow-transition-view-dialog .aui-dialog2-content {
+    section#workflow-transition-view-dialog .aui-dialog2-content,
+    section#create-subtask-dialog .aui-dialog2-content {
         position: absolute !important;
         top: 60px !important;
         bottom: 55px !important;
@@ -47,7 +50,8 @@
     section#edit-issue-dialog .aui-dialog2-header,
     section#link-issue-dialog .aui-dialog2-header,
     section#clone-issue-dialog .aui-dialog2-header,
-    section#workflow-transition-view-dialog .aui-dialog2-header {
+    section#workflow-transition-view-dialog .aui-dialog2-header,
+    section#create-subtask-dialog .aui-dialog2-header {
         position: absolute !important;
         top: 0;
         width: 100%;
@@ -59,7 +63,8 @@
     section#edit-issue-dialog .aui-dialog2-footer,
     section#link-issue-dialog .aui-dialog2-footer,
     section#clone-issue-dialog .aui-dialog2-footer,
-    section#workflow-transition-view-dialog .aui-dialog2-footer {
+    section#workflow-transition-view-dialog .aui-dialog2-footer,
+    section#create-subtask-dialog .aui-dialog2-footer {
         position: absolute !important;
         bottom: 0;
         width: 100%;
@@ -204,6 +209,15 @@
 
     .mce-edit-area iframe {
         min-height: 50vh !important;
+    }
+
+    /* =========================================
+       6. Summary 框宽度调整 (v1.0.13)
+       ========================================= */
+    input#summary {
+        max-width: none !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 
 }

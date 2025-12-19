@@ -2,7 +2,7 @@
 // @name         Wide JIRA
 // @namespace    https://greasyfork.org/users/206706
 // @license      MIT
-// @version      1.0.11
+// @version      1.0.13
 // @description  Widen your create issue box in JIRA
 // @author       Fishswing (Enhanced by Gemini)
 // @include      http://jira.*
@@ -16,16 +16,18 @@
 (function() {
     'use strict';
 
-    // 1. CSS 样式修复 (保持 v1.0.10 的所有 CSS 修复)
+    // 1. CSS 样式修复
     const css = `
     /* =========================================
-       1. 针对主业务弹窗 (Create/Edit/Link) 的优化
+       1. 针对主业务弹窗 (Create/Edit/Link/Sub-task) 的优化
+       【v1.0.12】新增 section#create-subtask-dialog 支持子任务弹窗
        ========================================= */
     section#create-issue-dialog,
     section#edit-issue-dialog,
     section#link-issue-dialog,
     section#clone-issue-dialog,
-    section#workflow-transition-view-dialog {
+    section#workflow-transition-view-dialog,
+    section#create-subtask-dialog {
         width: 80vw !important;
         left: 10vw !important;
         top: 5vh !important;
@@ -38,7 +40,8 @@
     section#edit-issue-dialog .aui-dialog2-content,
     section#link-issue-dialog .aui-dialog2-content,
     section#clone-issue-dialog .aui-dialog2-content,
-    section#workflow-transition-view-dialog .aui-dialog2-content {
+    section#workflow-transition-view-dialog .aui-dialog2-content,
+    section#create-subtask-dialog .aui-dialog2-content {
         position: absolute !important;
         top: 60px !important;
         bottom: 55px !important;
@@ -56,7 +59,8 @@
     section#edit-issue-dialog .aui-dialog2-header,
     section#link-issue-dialog .aui-dialog2-header,
     section#clone-issue-dialog .aui-dialog2-header,
-    section#workflow-transition-view-dialog .aui-dialog2-header {
+    section#workflow-transition-view-dialog .aui-dialog2-header,
+    section#create-subtask-dialog .aui-dialog2-header {
         position: absolute !important;
         top: 0;
         width: 100%;
@@ -68,7 +72,8 @@
     section#edit-issue-dialog .aui-dialog2-footer,
     section#link-issue-dialog .aui-dialog2-footer,
     section#clone-issue-dialog .aui-dialog2-footer,
-    section#workflow-transition-view-dialog .aui-dialog2-footer {
+    section#workflow-transition-view-dialog .aui-dialog2-footer,
+    section#create-subtask-dialog .aui-dialog2-footer {
         position: absolute !important;
         bottom: 0;
         width: 100%;
@@ -214,6 +219,15 @@
     .mce-edit-area iframe {
         min-height: 50vh !important;
     }
+
+    /* =========================================
+       6. Summary 框宽度调整 (v1.0.13)
+       ========================================= */
+    input#summary {
+        max-width: none !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
     `;
 
     if (typeof GM_addStyle !== "undefined") {
@@ -224,40 +238,31 @@
         (document.querySelector("head") || document.documentElement).appendChild(styleNode);
     }
 
-    // 2. JavaScript 逻辑修复 (v1.0.11 新增)
+    // 2. JavaScript 逻辑修复
     // 解决 "Browse" 按钮在独立页面模式下点击无效的问题
-    // 由于 JIRA 的上传 input 组件位置错乱，我们通过 JS 拦截点击并手动转发给 input
     function fixBrowseClick() {
         document.addEventListener('click', function(e) {
-            // 检查点击的是否是 "Browse" 链接 (通常包含 .wiki-attachment-browse 类或文本)
             const target = e.target;
             const isBrowseLink = target.classList.contains('wiki-attachment-browse') ||
                                  target.innerText.trim() === 'Browse';
 
             if (isBrowseLink) {
                 console.log("Wide JIRA: Intercepted click on Browse button.");
-
-                // 查找页面上的文件输入框
-                // 优先查找 name="file" 的输入框，或者任意 file input
                 const fileInput = document.querySelector('input[type="file"][name="file"]') ||
                                   document.querySelector('input[type="file"]');
 
                 if (fileInput) {
                     console.log("Wide JIRA: Found file input, triggering click manually.");
-                    // 阻止默认行为（防止 JIRA 某些报错）
                     e.preventDefault();
                     e.stopPropagation();
-
-                    // 手动触发文件选择框
                     fileInput.click();
                 } else {
                     console.error("Wide JIRA: Could not find any file input on the page!");
                 }
             }
-        }, true); // 使用捕获模式(true)以确保在 JIRA 自己的事件之前执行
+        }, true);
     }
 
-    // 立即运行修复逻辑，或者等待 DOM Ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', fixBrowseClick);
     } else {
