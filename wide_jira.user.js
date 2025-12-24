@@ -2,7 +2,7 @@
 // @name         Wide JIRA
 // @namespace    https://greasyfork.org/users/206706
 // @license      MIT
-// @version      1.0.13
+// @version      1.0.17
 // @description  Widen your create issue box in JIRA
 // @author       Fishswing (Enhanced by Gemini)
 // @include      http://jira.*
@@ -20,7 +20,7 @@
     const css = `
     /* =========================================
        1. 针对主业务弹窗 (Create/Edit/Link/Sub-task) 的优化
-       【v1.0.12】新增 section#create-subtask-dialog 支持子任务弹窗
+       【v1.0.17】回滚至 v1.0.13 逻辑，移除复杂的滚动/Form修复
        ========================================= */
     section#create-issue-dialog,
     section#edit-issue-dialog,
@@ -48,9 +48,14 @@
         left: 0 !important;
         right: 0 !important;
         width: 100% !important;
+
+        /* 恢复 v1.0.13 的 height: auto，允许内容自然撑开 */
         height: auto !important;
         max-height: none !important;
+
         overflow-y: auto !important;
+        /* 防止 Summary 过宽出现横向滚动条 */
+        overflow-x: hidden !important;
         box-sizing: border-box !important;
         background-color: #fff !important;
     }
@@ -142,7 +147,7 @@
     }
 
     /* =========================================
-       3. 修复 Wiki 编辑器附件下拉菜单
+       3. 修复 Wiki 编辑器附件下拉菜单 (保留 v1.0.14 的长文件名修复)
        ========================================= */
     body.aui-page-focused .wiki-edit-dropdown-attachment {
         position: fixed !important;
@@ -151,7 +156,12 @@
         transform: translate(-50%, -50%) !important;
         height: auto !important;
         min-height: 150px !important;
-        width: 320px !important;
+
+        /* 针对长文件名的宽度优化 */
+        min-width: 320px !important;
+        max-width: 600px !important;
+        width: auto !important;
+
         z-index: 100000 !important;
         background: #fff !important;
         border: 1px solid #ccc !important;
@@ -172,6 +182,15 @@
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
+    }
+
+    /* 强制长文件名换行 */
+    body.aui-page-focused .wiki-edit-dropdown-attachment li a {
+        white-space: normal !important;
+        word-break: break-all !important;
+        overflow-wrap: break-word !important;
+        line-height: 1.4 !important;
+        padding: 5px !important;
     }
 
     body.aui-page-focused .wiki-edit-toolbar .wiki-edit-attachment-picker-trigger {
@@ -221,7 +240,7 @@
     }
 
     /* =========================================
-       6. Summary 框宽度调整 (v1.0.13)
+       6. Summary 框宽度调整
        ========================================= */
     input#summary {
         max-width: none !important;
@@ -238,8 +257,7 @@
         (document.querySelector("head") || document.documentElement).appendChild(styleNode);
     }
 
-    // 2. JavaScript 逻辑修复
-    // 解决 "Browse" 按钮在独立页面模式下点击无效的问题
+    // 2. JavaScript 逻辑修复 (Browse 按钮点击修复)
     function fixBrowseClick() {
         document.addEventListener('click', function(e) {
             const target = e.target;
