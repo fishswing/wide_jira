@@ -2,9 +2,9 @@
 // @name         Wide JIRA
 // @namespace    https://greasyfork.org/users/206706
 // @license      MIT
-// @version      1.0.17
+// @version      1.0.18
 // @description  Widen your create issue box in JIRA
-// @author       Fishswing (Enhanced by Gemini)
+// @author       Fishswing, Gemini
 // @include      http://jira.*
 // @include      https://jira.*
 // @include      http://*/jira/*
@@ -16,11 +16,11 @@
 (function() {
     'use strict';
 
-    // 1. CSS 样式修复
+    // 1. CSS Style Fixes
     const css = `
     /* =========================================
-       1. 针对主业务弹窗 (Create/Edit/Link/Sub-task) 的优化
-       【v1.0.17】回滚至 v1.0.13 逻辑，移除复杂的滚动/Form修复
+       1. Optimization for main business dialogs (Create/Edit/Link/Sub-task)
+       [v1.0.17] Rollback to v1.0.13 logic, removed complex scroll/Form fixes
        ========================================= */
     section#create-issue-dialog,
     section#edit-issue-dialog,
@@ -49,12 +49,12 @@
         right: 0 !important;
         width: 100% !important;
 
-        /* 恢复 v1.0.13 的 height: auto，允许内容自然撑开 */
+        /* Restore height: auto from v1.0.13, allowing content to expand naturally */
         height: auto !important;
         max-height: none !important;
 
         overflow-y: auto !important;
-        /* 防止 Summary 过宽出现横向滚动条 */
+        /* Prevent horizontal scrollbar when Summary is too wide */
         overflow-x: hidden !important;
         box-sizing: border-box !important;
         background-color: #fff !important;
@@ -87,7 +87,7 @@
     }
 
     /* =========================================
-       2. 针对附件弹窗 (Attachment Dialog) 的修复
+       2. Fixes for Attachment Dialog
        ========================================= */
     body.aui-page-focused .aui-dialog2[id*="attach"],
     body.aui-page-focused .aui-dialog2[id*="upload"] {
@@ -147,7 +147,7 @@
     }
 
     /* =========================================
-       3. 修复 Wiki 编辑器附件下拉菜单 (保留 v1.0.14 的长文件名修复)
+       3. Fix Wiki editor attachment dropdown menu (Keep long filename fix from v1.0.14)
        ========================================= */
     body.aui-page-focused .wiki-edit-dropdown-attachment {
         position: fixed !important;
@@ -157,7 +157,7 @@
         height: auto !important;
         min-height: 150px !important;
 
-        /* 针对长文件名的宽度优化 */
+        /* Width optimization for long filenames */
         min-width: 320px !important;
         max-width: 600px !important;
         width: auto !important;
@@ -184,7 +184,7 @@
         opacity: 1 !important;
     }
 
-    /* 强制长文件名换行 */
+    /* Force line break for long filenames */
     body.aui-page-focused .wiki-edit-dropdown-attachment li a {
         white-space: normal !important;
         word-break: break-all !important;
@@ -201,7 +201,7 @@
     }
 
     /* =========================================
-       4. 针对独立页面模式 (Standalone Page) 的优化
+       4. Optimization for Standalone Page mode
        ========================================= */
     .aui-page-focused-large .aui-page-panel {
         width: 90% !important;
@@ -216,7 +216,7 @@
     }
 
     /* =========================================
-       5. 编辑器高度与调整 (The Editor)
+       5. Editor height and adjustments (The Editor)
        ========================================= */
     .jira-editor-container,
     .jira-wikifield {
@@ -240,7 +240,7 @@
     }
 
     /* =========================================
-       6. Summary 框宽度调整
+       6. Summary box width adjustment
        ========================================= */
     input#summary {
         max-width: none !important;
@@ -257,7 +257,8 @@
         (document.querySelector("head") || document.documentElement).appendChild(styleNode);
     }
 
-    // 2. JavaScript 逻辑修复 (Browse 按钮点击修复)
+    // 2. JavaScript Logic Fixes (Fix Browse button click)
+    // Resolve the issue where the "Browse" button is unclickable in standalone page mode
     function fixBrowseClick() {
         document.addEventListener('click', function(e) {
             const target = e.target;
