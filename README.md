@@ -9,4 +9,4 @@ For other URLs, add it to "User Includes" in your UserScript manager.
 &nbsp;
 
 Install from Greasy Fork:
-> <https://greasyfork.org/zh-CN/scripts/438310-wide-jira>
+> <https://greasyfork.org/scripts/570227-wide-jira>
